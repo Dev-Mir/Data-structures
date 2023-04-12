@@ -1,0 +1,75 @@
+    /* Class node is defined as :
+     *    class Node 
+     *        int val;    //Value
+     *        int ht;        //Height
+     *        Node left;    //Left child
+     *        Node right;    //Right child
+     * 
+     */
+    static Node insert(Node root , int val) {
+        root = insertValue(root, val);
+        return root;
+    }
+    
+    static Node insertValue(Node root, int val) {
+        if (root == null){
+            root = new Node();
+            root.val = val;
+            return root;
+        }
+        if (val < root.val)
+            root.left = insertValue(root.left, val);
+        else
+            root.right = insertValue(root.right, val);
+        
+        height(root);
+        return balance(root);
+    }
+
+    static Node leftRotate(Node root) {
+        Node rootr = root.right;
+        
+        root.right = rootr.left;
+        rootr.left = root;
+        
+        height(root);
+        
+        return rootr;
+    }
+    static Node rightRotate(Node root) {
+        Node rootl = root.left;
+        
+        root.left = rootl.right;
+        rootl.right = root;
+        
+        height(root);
+        
+        return rootl;
+    }
+    static Node balance(Node root) {
+        if (balanceFactor(root) > 1) {
+            if (balanceFactor(root.left) < 0)
+                root.left = leftRotate(root.left);
+            return rightRotate(root);
+        }
+        else if (balanceFactor(root) < -1) {
+            if (balanceFactor(root.right) > 0)
+                root.right = rightRotate(root.right);
+            return leftRotate(root);
+        }
+        return root;
+    }
+    static int balanceFactor(Node node) {   
+        return height(node.left) - height(node.right);
+    }
+    static int max(int v1, int v2){
+        return v1>v2?v1:v2;
+    }
+    
+    static int height(Node root){
+        if(root == null){
+            return -1;
+        }
+        root.ht =  1 + max(height(root.left), height(root.right));
+        return root.ht;
+    }
